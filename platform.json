@@ -5,12 +5,7 @@
     "version": "0.0.1",
     "homepage": "https://www.nuvoton.com/",
     "license": "Apache-2.0",
-    "frameworks": {
-        "mbed": {
-            "package": "framework-mbed",
-            "script": "builder/frameworks/mbed.py"
-          }
-    },
+    "frameworks": [],
     "packages": {
       "toolchain-gccarmnoneeabi": {
         "type": "toolchain",
