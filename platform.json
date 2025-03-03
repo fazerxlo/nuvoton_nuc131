@@ -1,0 +1,24 @@
+{
+    "name": "nuvoton",
+    "title": "Nuvoton",
+    "description": "Support for Nuvoton NUC131 series microcontrollers.",
+    "version": "0.0.1",
+    "homepage": "https://www.nuvoton.com/",
+    "license": "Apache-2.0",
+    "frameworks": {
+        "mbed": {
+            "package": "framework-mbed",
+            "script": "builder/frameworks/mbed.py"
+          }
+    },
+    "packages": {
+      "toolchain-gccarmnoneeabi": {
+        "type": "toolchain",
+        "version": "~1.90301.0"
+      },
+      "tool-nuvoton-isp": {
+        "type": "uploader",
+        "version": "0.0.1"
+      }
+    }
+  }

@@ -1,0 +1,33 @@
+{
+    "build": {
+      "cpu": "cortex-m0",
+      "f_cpu": "50000000L",
+      "mcu": "nuc131xe3ae",
+      "extra_flags": "-D__NUC131__",
+        "ldscript": "nuc131.ld",
+        "variant": "NUC131"
+    },
+    "debug": {
+      "default_tools": [
+        "stlink"
+      ],
+      "onboard_tools": [
+        "stlink"
+      ],
+      "svd_path": "NUC131.svd"
+    },
+    "frameworks": [
+      "mbed"
+    ],
+    "name": "Nuvoton NUC131",
+    "upload": {
+      "maximum_ram_size": 16384,
+      "maximum_size": 131072,
+      "protocol": "nuvoton-isp",
+      "protocols": [
+        "nuvoton-isp"
+      ]
+    },
+    "url": "https://www.nuvoton.com/products/microcontrollers/arm-cortex-m0-mcus/nuc131-series/",
+    "vendor": "Nuvoton"
+  }
