@@ -1,9 +1,9 @@
 from os.path import join
-from SCons.Script import DefaultEnvironment, Import, Builder
+from SCons.Script import *
 
-Import("env")
+env = DefaultEnvironment()
 
-# --- Helper Functions (Consider moving these to a separate file) ---
+# --- Helper Functions ---
 
 def add_includes(env, include_paths):
     """Adds include paths to the environment."""
@@ -24,7 +24,6 @@ def add_defines(env, defines):
 env.Replace(
     LINKFLAGS=[
         "-mcpu=cortex-m0",
-        "-mthumb",
         "-specs=nano.specs",
         "-specs=nosys.specs",
         "-Wl,-Map=" + join("$BUILD_DIR", "${PROGNAME}.map"),
@@ -36,13 +35,12 @@ env.Replace(
         "-Wall",
         "-march=armv6-m",
         "-D__NUC131__",
-        # Add other -D flags *after* checking BSP examples
     ],
   CFLAGS = [
 
     ],
     CXXFLAGS=[
-      "-std=gnu++14"
+      "-std=gnu++11"
     ]
 )
 
@@ -72,6 +70,8 @@ add_sources(env, join("$BUILD_DIR", "bsp", "Device", "NUC131"),
              join("$PROJECT_DIR", "bsp", "Device", "NUC131", "Source"))
 add_sources(env, join("$BUILD_DIR", "bsp", "StdDriver"),
              join("$PROJECT_DIR", "bsp", "StdDriver", "src"))
+add_sources(env, join("$BUILD_DIR", "bsp", "Device", "NUC131", "Startup"),
+    join("$PROJECT_DIR", "bsp", "Device", "NUC131", "Source", "GCC")) #Adjust the folder accordingly
 # Add startup files here if not already included
 
 # 3. Preprocessor Definitions (if needed)
