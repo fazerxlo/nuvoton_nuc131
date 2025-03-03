@@ -1,6 +1,6 @@
 from os.path import join
 
-from SCons.Script import DefaultEnvironment, Import
+from SCons.Script import DefaultEnvironment, Import, Builder
 
 Import("env")
 
@@ -12,14 +12,15 @@ env.Replace(
         "-mcpu=cortex-m0",
         "-mthumb",
         "-specs=nano.specs",
-        "-specs=nosys.specs",  # If you don't have newlib, use nosys
+        "-specs=nosys.specs",  # Or retarget.specs if you have retargeting
         "--specs=retarget.specs",
         "-lnosys"
     ],
-      CCFLAGS=[
+    CCFLAGS=[
         "-std=gnu11",
         "-Wall",
-        "-march=armv6-m"
+        "-march=armv6-m",
+        "-D__NUC131__" # Ensure this is defined here as well
     ],
     CFLAGS = [
 
@@ -28,6 +29,7 @@ env.Replace(
       "-std=gnu++14"
     ]
 )
+
 env.Append(
 
     LIBS=[
@@ -35,9 +37,27 @@ env.Append(
       "supc++",
       "c",
       "gcc"
+    ],
+    CPPPATH=[  # Add include paths for the BSP
+        "$PROJECT_DIR/bsp/CMSIS/Include",
+        "$PROJECT_DIR/bsp/Device/NUC131/Include",
+        "$PROJECT_DIR/bsp/StdDriver/inc"
+    ],
+    # Assuming source files are directly under these directories:
+    CPPDEFINES=[
     ]
+
+)
+# Add source files from the BSP to the build
+env.BuildSources(
+    join("$BUILD_DIR", "bsp", "Device", "NUC131"),
+    join("$PROJECT_DIR","bsp", "Device", "NUC131", "Source"),
 )
 
+env.BuildSources(
+    join("$BUILD_DIR", "bsp", "StdDriver"),
+    join("$PROJECT_DIR","bsp", "StdDriver", "src"),
+)
 #
 # Target: Build executable and linkable firmware
 #
