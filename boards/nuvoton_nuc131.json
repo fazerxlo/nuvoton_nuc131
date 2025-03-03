@@ -4,8 +4,8 @@
       "f_cpu": "50000000L",
       "mcu": "nuc131xe3ae",
       "extra_flags": "-D__NUC131__",
-        "ldscript": "nuc131.ld",
-        "variant": "NUC131"
+      "ldscript": "NUC131xE3AE.ld",
+      "variant": "NUC131"
     },
     "debug": {
       "default_tools": [

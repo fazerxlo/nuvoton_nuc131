@@ -1,17 +1,64 @@
-from platformio.public import PlatformBase
+from os.path import join
 
-class NuvotonPlatform(PlatformBase):
+from SCons.Script import DefaultEnvironment, Import, Builder
 
-    def configure_default_packages(self, variables, targets):
-        return super().configure_default_packages(variables, targets)
+Import("env")
 
-    def get_boards(self, id_=None):
-        result = super().get_boards(id_)
-        if not result:
-            return result
-        if id_:
-            return self._add_default_debug_tools(result)
-        else:
-            for key, value in result.items():
-                result[key] = self._add_default_debug_tools(value)
-        return result
+# Access to global build environment
+# print(env.Dump())
+
+env.Replace(
+    LINKFLAGS=[
+        "-mcpu=cortex-m0",
+        "-mthumb",
+        "-specs=nano.specs",
+        "-specs=nosys.specs",  # Or retarget.specs if you have retargeting
+        "--specs=retarget.specs",
+        "-lnosys"
+    ],
+    CCFLAGS=[
+        "-std=gnu11",
+        "-Wall",
+        "-march=armv6-m",
+        "-D__NUC131__" # Ensure this is defined here as well
+    ],
+    CFLAGS = [
+
+    ],
+    CXXFLAGS=[
+      "-std=gnu++14"
+    ]
+)
+
+env.Append(
+
+    LIBS=[
+      "stdc++",
+      "supc++",
+      "c",
+      "gcc"
+    ],
+    CPPPATH=[  # Add include paths for the BSP
+        "$PROJECT_DIR/bsp/CMSIS/Include",
+        "$PROJECT_DIR/bsp/Device/NUC131/Include",
+        "$PROJECT_DIR/bsp/StdDriver/inc"
+    ],
+    # Assuming source files are directly under these directories:
+    CPPDEFINES=[
+    ]
+
+)
+# Add source files from the BSP to the build
+env.BuildSources(
+    join("$BUILD_DIR", "bsp", "Device", "NUC131"),
+    join("$PROJECT_DIR","bsp", "Device", "NUC131", "Source"),
+)
+
+env.BuildSources(
+    join("$BUILD_DIR", "bsp", "StdDriver"),
+    join("$PROJECT_DIR","bsp", "StdDriver", "src"),
+)
+#
+# Target: Build executable and linkable firmware
+#
+target_elf = env.BuildProgram()

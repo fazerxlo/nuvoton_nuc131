@@ -15,10 +15,6 @@
       "toolchain-gccarmnoneeabi": {
         "type": "toolchain",
         "version": "~1.90301.0"
-      },
-      "tool-nuvoton-isp": {
-        "type": "uploader",
-        "version": "0.0.1"
       }
     }
   }
