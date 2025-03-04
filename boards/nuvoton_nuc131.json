@@ -16,9 +16,6 @@
       ],
       "svd_path": "NUC131.svd"
     },
-    "frameworks": [
-      "mbed"
-    ],
     "name": "Nuvoton NUC131",
     "upload": {
       "maximum_ram_size": 16384,
