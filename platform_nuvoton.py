@@ -2,7 +2,6 @@ import os
 from platformio.public import PlatformBase
 from platformio.util import get_systype
 class NuvotonPlatform(PlatformBase):
-
     def configure_default_packages(self, variables, targets):
         # Get the system type
         system_type = get_systype()

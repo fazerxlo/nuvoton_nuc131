@@ -22,6 +22,39 @@ def add_defines(env, defines):
 # --- Main Build Script ---
 
 env.Replace(
+    AR="arm-none-eabi-gcc-ar",
+    AS="arm-none-eabi-as",
+    CC="arm-none-eabi-gcc",
+    CXX="arm-none-eabi-g++",
+    GDB="arm-none-eabi-gdb",
+    OBJCOPY="arm-none-eabi-objcopy",
+    RANLIB="arm-none-eabi-gcc-ranlib",
+    SIZETOOL="arm-none-eabi-size",
+)
+
+
+# arm-none-eabi-gcc
+# -o .pio/build/nuvoton_nuc131/src/main.o
+# -c -std=gnu11
+# -Wall
+# -march=armv6-m 
+# -D__NUC131__ 
+# -DPLATFORMIO=60117 
+# -D__NUC131__ 
+# -Iinclude 
+# -Isrc 
+# -Ibsp/CMSIS/Include 
+# -Ibsp/Device/NUC131/Include 
+# -Ibsp/StdDriver/inc src/main.c
+
+env.Replace(
+    CCFLAGS=[
+        "-std=gnu11",
+        "-Wall",
+        "-march=armv6-m",
+        "-D__NUC131__",
+        "-Wl,--verbose"
+    ],
     LINKFLAGS=[
         "-mcpu=cortex-m0",
         "-specs=nano.specs",
@@ -30,13 +63,7 @@ env.Replace(
         "-Wl,--gc-sections",
         "-lnosys"
     ],
-    CCFLAGS=[
-        "-std=gnu11",
-        "-Wall",
-        "-march=armv6-m",
-        "-D__NUC131__",
-    ],
-  CFLAGS = [
+    CFLAGS = [
 
     ],
     CXXFLAGS=[
