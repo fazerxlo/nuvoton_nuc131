@@ -1,3 +1,5 @@
+import os
+import shutil
 from os.path import join
 from SCons.Script import *
 
@@ -19,7 +21,29 @@ def add_defines(env, defines):
     for define in defines:
         env.Append(CPPDEFINES=[define])
 
+# --- Copy BSP Directory (NEW FUNCTION) ---
+
+def copy_bsp(env):
+    """Copies the BSP directory to the build directory."""
+    platform_dir = env.PioPlatform().get_dir() # Get platform dir
+    bsp_src_dir = os.path.join(platform_dir, "bsp")
+    build_dir = env.get("PROJECT_BUILD_DIR")
+    pioenvv = env.get("PIOENV")
+    print(env.get("PIOENV"))
+    bsp_dest_dir = os.path.join(build_dir, "bsp")
+
+    if os.path.exists(bsp_src_dir):
+        if os.path.exists(bsp_dest_dir):
+            shutil.rmtree(bsp_dest_dir)  # Clean previous copy
+        shutil.copytree(bsp_src_dir, bsp_dest_dir)
+        print(f"Copied 'bsp' directory to {bsp_dest_dir}")
+    else:
+        print(f"Warning: 'bsp' directory not found in {bsp_src_dir}")
+
 # --- Main Build Script ---
+
+# Call the function to copy the BSP
+copy_bsp(env)
 
 env.Replace(
     AR="arm-none-eabi-gcc-ar",
@@ -67,7 +91,7 @@ env.Replace(
 
     ],
     CXXFLAGS=[
-      "-std=gnu++11"
+      "-std=gnu++14"
     ]
 )
 
@@ -85,20 +109,19 @@ env.Append(
 
 # 1. Include Paths
 bsp_include_paths = [
-    "$PROJECT_DIR/bsp/CMSIS/Include",
-    "$PROJECT_DIR/bsp/Device/NUC131/Include",
-    "$PROJECT_DIR/bsp/StdDriver/inc"
-    # Add *all* necessary include paths here
+    join("$PROJECT_BUILD_DIR", "bsp", "CMSIS", "Include"),     # Use $BUILD_DIR
+    join("$PROJECT_BUILD_DIR", "bsp", "Device", "NUC131", "Include"),  # Use $BUILD_DIR
+    join("$PROJECT_BUILD_DIR", "bsp", "StdDriver", "inc")   # Use $BUILD_DIR
 ]
 add_includes(env, bsp_include_paths)
 
 # 2. Source Files
 add_sources(env, join("$BUILD_DIR", "bsp", "Device", "NUC131"),
-             join("$PROJECT_DIR", "bsp", "Device", "NUC131", "Source"))
+             join("$BUILD_DIR", "bsp", "Device", "NUC131", "Source")) # Use $BUILD_DIR
 add_sources(env, join("$BUILD_DIR", "bsp", "StdDriver"),
-             join("$PROJECT_DIR", "bsp", "StdDriver", "src"))
+             join("$BUILD_DIR", "bsp", "StdDriver", "src")) # Use $BUILD_DIR
 add_sources(env, join("$BUILD_DIR", "bsp", "Device", "NUC131", "Startup"),
-    join("$PROJECT_DIR", "bsp", "Device", "NUC131", "Source", "GCC")) #Adjust the folder accordingly
+    join("$BUILD_DIR", "bsp", "Device", "NUC131", "Source", "GCC")) # Use $BUILD_DIR
 # Add startup files here if not already included
 
 # 3. Preprocessor Definitions (if needed)
